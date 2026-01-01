@@ -182,7 +182,9 @@ button {
 
 <input id="myName" placeholder="اكتب اسمك الحقيقي بالعربي">
 <br>
-<button onclick="start()">🔥 ابدأ فتيلك</button>
+<button id="startBtn" onclick="start()" disabled>
+🔥 ابدأ فتيلك
+</button>
 
 <br>
 <button onclick="toggleMusic()">🎵 تشغيل / إيقاف الموسيقى</button>
@@ -233,8 +235,11 @@ let playersData = {};
 
 db.collection("fateel").doc("main").onSnapshot((doc) => {
   if (!doc.exists) return;
-
   playersData = doc.data().players;
+  
+  // تفعيل الزر بعد تحميل البيانات
+document.getElementById("startBtn").disabled = false;
+  
   // 🔢 حساب العداد
 const allNames = Object.keys(playersData);
 const litNames = allNames.filter(name => playersData[name] === true);
@@ -308,6 +313,12 @@ window.onload = function () {
 </script>
 
 <script>
+function normalizeName(name) {
+  return name.trim().replace(/\s+/g, " ");
+}
+</script>
+
+<script>
 function start() {
 
   // ⛔ منع التكرار
@@ -316,26 +327,34 @@ function start() {
     return;
   }
 
-  const nameInput = document.getElementById("myName").value.trim();
+  const inputName = normalizeName(
+    document.getElementById("myName").value
+  );
 
-  if (nameInput.length < 3) {
+  if (inputName.length < 3) {
     alert("✍️ اكتب اسمك كامل من فضلك");
     return;
   }
 
-  if (!playersData.hasOwnProperty(nameInput)) {
+  const registeredNames = Object.keys(playersData);
+
+  const matchedName = registeredNames.find(
+    n => normalizeName(n) === inputName
+  );
+
+  if (!matchedName) {
     alert("❌ اسمك غير مسجل معنا");
     return;
   }
 
-// ⛔ الاسم ده شارك قبل كده
-if (playersData[nameInput] === true) {
-  alert("🕯️ اسمك شارك قبل كده، شكراً لمشاركتك");
-  return;
-}
+  // ⛔ الاسم ده شارك قبل كده
+  if (playersData[matchedName] === true) {
+    alert("🕯️ اسمك شارك قبل كده، شكراً لمشاركتك");
+    return;
+  }
 
-  const available = Object.keys(playersData).filter(
-    name => playersData[name] === false && name !== nameInput
+  const available = registeredNames.filter(
+    name => playersData[name] === false && name !== matchedName
   );
 
   if (available.length === 0) {
@@ -384,6 +403,13 @@ function toggleMusic() {
 }
 </script>
 
+<div style="
+  margin-top:40px;
+  font-size:14px;
+  opacity:0.7;
+">
+  © 2026 Developed by <b>Michel Fouad</b>
+</div>
 
 </body>
 </html>
