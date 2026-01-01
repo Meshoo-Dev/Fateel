@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>فتيل ❤️🔥</title>
+
+<style>
+body {
+  margin: 0;
+  padding-bottom: 40px;
+  font-family: Tahoma, Arial;
+  background: linear-gradient(to bottom, #0b2a4a, #1e5aa8);
+  color: white;
+  text-align: center;
+  direction: rtl;
+  overflow-x: hidden;
+}
+
+.hero {
+  padding: 20px;
+}
+
+.logo {
+  width: 120px;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 58px;
+  font-weight: 900; /* خط تخين */
+  color: gold;
+  text-shadow: 0 0 20px rgba(255,215,0,1);
+  margin-bottom: 5px;
+}
+
+.images img {
+  width: 120px;
+  margin: 10px;
+}
+
+.box {
+  background: rgba(255,255,255,0.15);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 20px;
+  backdrop-filter: blur(6px);
+}
+
+input {
+  width: 80%;
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: none;
+  text-align: center;
+}
+
+button {
+  margin-top: 25px;
+  padding: 12px 30px;
+  font-size: 20px;
+  background: linear-gradient(to right, #ff5722, #ff9800);
+  color: white;
+  border: none;
+  border-radius: 30px;
+}
+
+#result {
+  display: none;
+  animation: fadeIn 1.2s ease forwards;
+}
+
+#chosenName {
+  font-size: 50px;
+  font-weight: bold;
+  color: gold;
+  text-shadow: 0 0 12px gold;
+  display: inline-block;
+  margin-left: 10px;
+  animation: pop 1s ease forwards;
+}
+
+#candle {
+  font-size: 50px;
+  animation: candleBlink 1s infinite alternate;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pop {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes candleBlink {
+  0% { opacity: 0.6; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-4px); }
+  100% { opacity: 0.6; transform: translateY(0); }
+}
+.players-grid {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  gap: 10px;
+  align-items: start;
+  margin-top: 20px;
+}
+
+.players-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.player {
+  background: rgba(255,255,255,0.2);
+  padding: 8px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 22px;
+  opacity: 0.9;
+}
+</style>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "ضع_API_KEY_هنا",
+    authDomain: "fateel-game.firebaseapp.com",
+    projectId: "fateel-game",
+    storageBucket: "fateel-game.appspot.com",
+    messagingSenderId: "XXXXXXXX",
+    appId: "XXXXXXXX"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
+</head>
+
+<body>
+
+<!-- موسيقى خاصة (تعمل بعد الضغط) -->
+<audio id="bells" loop>
+  <source src="anthem.mp3" type="audio/mpeg">
+  المتصفح لا يدعم تشغيل الصوت
+</audio>
+
+<div class="hero">
+  <img src="https://i.ibb.co/35RJp9Xb/logo.png" class="logo">
+  <div class="title">فتيل ❤️🔥</div>
+  <div>🎄 Happy New Year 🎄</div>
+
+  <div class="images">
+    <img src="https://i.ibb.co/bjyMfxx7/santa.png">
+    <img src="https://i.ibb.co/sp5Whbwq/tree.png">
+  </div>
+</div>
+
+<div class="box">
+🎄 Happy new year 🎄<br>
+فتيل ❤️🔥<br>
+مجموعة البشارة المفرحة الكشفية<br><br>
+نرحب بك دائمًا معنا ونفرح بوجودك في وسطنا<br>
+تعال نبدأ معًا سنة جديدة بوجود ربنا في حياتك<br>
+اجعل عام 2026 نور لحياتك وللآخرين<br>
+أنتم نور العالم ❤️🔥<br><br>
+اكتب اسمك الحقيقي باللغة العربية واضغط<br>
+وانتظر المفاجأة 💥🎁🎊
+</div>
+
+<input id="myName" placeholder="اكتب اسمك الحقيقي بالعربي">
+<br>
+<button onclick="start()">🔥 ابدأ فتيلك</button>
+
+<br>
+<button onclick="toggleMusic()">🎵 تشغيل / إيقاف الموسيقى</button>
+
+<div id="result" class="box">
+  <div>
+    <span id="chosenName"></span>
+    <span id="candle">🕯️</span>
+  </div>
+
+  <p>الفتيل هو الخيط البسيط الذي يختبئ داخل الشمعة، لا أحد يراه، لكن بدونه لا يوجد نور.</p>
+  <p>صلاتك من أجل الآخر في الخفاء هي "الفتيل". قد لا يراك الناس وأنت تصلي، وقد لا يعرف الشخص أنك ذكرته، لكن صلاتك هي التي أبقت نوره مشتعلاً.</p>
+  <p><b>خلف كل نور.. صلاة.</b></p>
+  <p>لكي نكون حقًا "نور العالم"، لازم قلوبنا تكون "فتيل" مشتعل بالمحبة.</p>
+  <p>اطلب الصلاة دائمًا من أجل أخوك اللي اسمه ظهر قدامك، فهي أجمل هدية تقدمها له في بداية العام الجديد.</p>
+  <p><b>كن الفتيل الذي يحمل النور للعالم.</b></p>
+  <p>كل سنة وانت طيب يا قائد ❤️</p>
+</div>
+
+<!-- قائمة الأسماء -->
+<div id="playersSection" class="box" style="display:none;">
+<div id="counter" style="margin-bottom:15px; font-size:18px;">
+  🕯️ تم إشعال <span id="litCount">0</span> من أصل <span id="totalCount">0</span> فتيل
+</div>
+  <h2>✨ فتائل منورة بالصلاة ✨</h2>
+
+  <div id="playersList" class="players-grid">
+
+  <div id="leftColumn" class="players-column"></div>
+
+  <div class="divider">
+    🎄<br>🎅<br>🎄<br>🎅<br>🎄<br>🎅
+  </div>
+
+  <div id="rightColumn" class="players-column"></div>
+
+  </div>
+
+  <div class="decor-line">🎄🎀🎄🎀🎄🎀🎄</div>
+
+  <p style="margin-top:25px;">
+    كل سنة وانت طيب يا قائد ❤️🎊💥🥰
+  </p>
+</div>
+
+<script>
+let playersData = {};
+
+db.collection("fateel").doc("main").onSnapshot((doc) => {
+  if (!doc.exists) return;
+
+  playersData = doc.data().players;
+  // 🔢 حساب العداد
+const allNames = Object.keys(playersData);
+const litNames = allNames.filter(name => playersData[name] === true);
+
+document.getElementById("totalCount").innerText = allNames.length;
+document.getElementById("litCount").innerText = litNames.length;
+
+  const left = document.getElementById("leftColumn");
+  const right = document.getElementById("rightColumn");
+
+  left.innerHTML = "";
+  right.innerHTML = "";
+
+  const names = Object.keys(playersData);
+  const mid = Math.ceil(names.length / 2);
+
+  names.forEach((name, index) => {
+    const div = document.createElement("div");
+    div.className = "player";
+    div.innerHTML = playersData[name] ? `${name} 🕯️` : name;
+
+    if (index < mid) {
+      left.appendChild(div);
+    } else {
+      right.appendChild(div);
+    }
+  });
+});
+</script>
+
+<script>
+window.onload = function () {
+
+  // لو الشخص لعب قبل كده فقط
+  if (localStorage.getItem("fateelPlayed")) {
+
+    const savedName = localStorage.getItem("fateelChosenName");
+
+    const waitForData = setInterval(() => {
+      if (Object.keys(playersData).length > 0) {
+
+        clearInterval(waitForData);
+
+        // إظهار الاسم المختار
+        if (savedName) {
+          const nameEl = document.getElementById("chosenName");
+          const candleEl = document.getElementById("candle");
+          
+          nameEl.innerText = savedName;
+
+          // إعادة الأنيميشن
+          nameEl.style.animation = "none";
+          candleEl.style.animation = "none";
+          void nameEl.offsetWidth;
+          nameEl.style.animation = "pop 1s ease forwards";
+          candleEl.style.animation = "candleBlink 1s infinite alternate";
+
+          document.getElementById("result").style.display = "block";
+          document.getElementById("playersSection").style.display = "block";
+          // 🎵 تشغيل الموسيقى لو كانت شغالة قبل كده
+   if (localStorage.getItem("fateelMusic") === "on") {
+   const audio = document.getElementById("bells");
+   audio.play().catch(() => {});
+    musicStarted = true;
+         }
+        }
+      }
+    }, 300);
+  }
+};
+</script>
+
+<script>
+function start() {
+
+  // ⛔ منع التكرار
+  if (localStorage.getItem("fateelPlayed")) {
+    alert("انت بالفعل أشعلت فتيلك 🕯️🔥");
+    return;
+  }
+
+  const nameInput = document.getElementById("myName").value.trim();
+
+  if (nameInput.length < 3) {
+    alert("✍️ اكتب اسمك كامل من فضلك");
+    return;
+  }
+
+  if (!playersData.hasOwnProperty(nameInput)) {
+    alert("❌ اسمك غير مسجل معنا");
+    return;
+  }
+
+// ⛔ الاسم ده شارك قبل كده
+if (playersData[nameInput] === true) {
+  alert("🕯️ اسمك شارك قبل كده، شكراً لمشاركتك");
+  return;
+}
+
+  const available = Object.keys(playersData).filter(
+    name => playersData[name] === false && name !== nameInput
+  );
+
+  if (available.length === 0) {
+    alert("كل الفتائل نورت 🕯️🔥");
+    return;
+  }
+
+  const chosen = available[Math.floor(Math.random() * available.length)];
+
+  db.collection("fateel").doc("main").update({
+    [`players.${chosen}`]: true
+  });
+
+  localStorage.setItem("fateelPlayed", "yes");
+  localStorage.setItem("fateelChosenName", chosen);
+
+  document.getElementById("chosenName").innerText = chosen;
+  document.getElementById("result").style.display = "block";
+  document.getElementById("playersSection").style.display = "block";
+
+  document.getElementById("bells").play().catch(() => {});
+  localStorage.setItem("fateelMusic", "on");
+  musicStarted = true;
+}
+</script>
+
+<script>
+let musicStarted = false;
+
+function toggleMusic() {
+  const audio = document.getElementById("bells");
+
+  if (!musicStarted) {
+    audio.currentTime = 0;
+    audio.play().then(() => {
+      musicStarted = true;
+      localStorage.setItem("fateelMusic", "on");
+    }).catch(() => {
+      alert("اضغط مرة أخرى لتشغيل الموسيقى 🎵");
+    });
+  } else {
+    audio.pause();
+    musicStarted = false;
+    localStorage.setItem("fateelMusic", "off");
+  }
+}
+</script>
+
+
+</body>
+</html>
