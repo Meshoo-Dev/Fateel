@@ -279,9 +279,6 @@ document.getElementById("litCount").innerText = litNames.length;
 <script>
 window.onload = function () {
 
-  // لو الشخص لعب قبل كده فقط
-  if (localStorage.getItem("fateelPlayed")) {
-
     const savedName = localStorage.getItem("fateelChosenName");
 
     const waitForData = setInterval(() => {
@@ -313,7 +310,7 @@ window.onload = function () {
          }
         }
       }
-    }, 300);
+   }, 300);
   }
 };
 </script>
@@ -326,12 +323,6 @@ function normalizeName(name) {
 
 <script>
 function start() {
-
-  // ⛔ منع التكرار
-  if (localStorage.getItem("fateelPlayed")) {
-    alert("انت بالفعل أشعلت فتيلك 🕯️🔥");
-    return;
-  }
 
   const inputName = normalizeName(
     document.getElementById("myName").value
@@ -353,7 +344,18 @@ function start() {
     return;
   }
 
-  // ⛔ الاسم ده شارك قبل كده
+  // 🧠 قراءة الأسماء اللي لعبت على الجهاز ده
+  const playedNames = JSON.parse(
+    localStorage.getItem("fateelPlayedNames") || "[]"
+  );
+
+  // ⛔ الاسم ده لعب قبل كده على نفس الجهاز
+  if (playedNames.includes(matchedName)) {
+    alert("🕯️ اسمك شارك قبل كده من نفس الجهاز");
+    return;
+  }
+
+  // ⛔ الاسم ده نورت شمعته بالفعل في Firebase
   if (playersData[matchedName] === true) {
     alert("🕯️ اسمك شارك قبل كده، شكراً لمشاركتك");
     return;
@@ -370,11 +372,18 @@ function start() {
 
   const chosen = available[Math.floor(Math.random() * available.length)];
 
+  // 🔥 تحديث Firebase
   db.collection("fateel").doc("main").update({
     [`players.${chosen}`]: true
   });
 
-  localStorage.setItem("fateelPlayed", "yes");
+  // 💾 حفظ الاسم ده فقط على الجهاز
+  playedNames.push(matchedName);
+  localStorage.setItem(
+    "fateelPlayedNames",
+    JSON.stringify(playedNames)
+  );
+
   localStorage.setItem("fateelChosenName", chosen);
 
   document.getElementById("chosenName").innerText = chosen;
