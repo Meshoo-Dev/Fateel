@@ -350,10 +350,19 @@ function start() {
   );
 
   // ⛔ الاسم ده لعب قبل كده على نفس الجهاز
-  if (playedNames.includes(matchedName)) {
-    alert("🕯️ اسمك شارك قبل كده من نفس الجهاز");
-    return;
+if (playedNames.includes(matchedName)) {
+  alert("🕯️ اسمك شارك قبل كده");
+
+  const savedChosen = localStorage.getItem("fateelChosenName");
+
+  if (savedChosen) {
+    document.getElementById("chosenName").innerText = savedChosen;
+    document.getElementById("result").style.display = "block";
+    document.getElementById("playersSection").style.display = "block";
   }
+
+  return;
+}
 
   // ⛔ الاسم ده نورت شمعته بالفعل في Firebase
   if (playersData[matchedName] === true) {
